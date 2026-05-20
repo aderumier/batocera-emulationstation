@@ -50,8 +50,11 @@ jobs:
       - name: Build
         run: cmake --build build --parallel $(nproc)
 
+      - name: Find binary
+        run: find build -name "emulationstation" -type f
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: emulationstation-ubuntu-24.04
-          path: build/es-app/emulationstation
+          path: build/emulationstation
