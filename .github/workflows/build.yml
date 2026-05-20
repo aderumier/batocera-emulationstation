@@ -51,7 +51,7 @@ jobs:
         run: cmake --build build --parallel $(nproc)
 
       - name: Find binary
-        run: find build -name "emulationstation" -type f
+        run: find build -type f -executable | sort
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
