@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - fix-api
+      - parent
+  pull_request:
+    branches:
+      - fix-api
+      - parent
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            build-essential \
+            libsdl2-dev \
+            libsdl2-mixer-dev \
+            libfreeimage-dev \
+            libfreetype6-dev \
+            libcurl4-openssl-dev \
+            libvlc-dev \
+            rapidjson-dev \
+            libasound2-dev \
+            libgl-dev \
+            libudev-dev \
+            gettext
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${{ github.workspace }}/output \
+            -DCMAKE_CXX_FLAGS=-DX86_64 \
+            -DGL=ON \
+            -DBATOCERA=ON \
+            -DCEC=OFF \
+            -DDISABLE_KODI=ON \
+            -DENABLE_PULSE=OFF \
+            -DENABLE_FILEMANAGER=ON \
+            -DENABLE_TTS=OFF
+
+      - name: Build
+        run: cmake --build build --parallel $(nproc)
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulationstation-ubuntu-24.04
+          path: output/emulationstation
