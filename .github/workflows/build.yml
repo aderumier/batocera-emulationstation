@@ -50,7 +50,8 @@ jobs:
             -DDISABLE_KODI=ON \
             -DENABLE_PULSE=OFF \
             -DENABLE_FILEMANAGER=ON \
-            -DENABLE_TTS=OFF
+            -DENABLE_TTS=OFF \
+            "-DSCREENSCRAPER_DEV_LOGIN=${{ secrets.SCREENSCRAPER_DEV_LOGIN }}"
 
       - name: Build
         run: cmake --build build --parallel $(nproc)
